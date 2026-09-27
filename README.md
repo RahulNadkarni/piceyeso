@@ -12,22 +12,66 @@ valley, not only a colour.
 The source is not public. For access, collaboration, or a methods question,
 contact [Rahul Nadkarni](https://github.com/RahulNadkarni).
 
-## For ophthalmologists
+## Supported files
 
-The website is a gallery of example eyes. A patient’s scan is opened in the
-**desktop app** on your computer. The file is not uploaded.
+A patient’s scan is opened in the **desktop app**. The file is not uploaded.
+The website is only a gallery of example eyes.
+
+| What you have | Open this | Do not open |
+| --- | --- | --- |
+| Heidelberg Spectralis | `.vol` or `.e2e` | — |
+| Heidelberg export | the folder or `.zip` (`.xml` **plus** the TIFF B-scans) | the `.xml` by itself |
+| Topcon | `.fda` | — |
+| Zeiss Cirrus | a DICOM export (a `.dcm` / `.dicom`, or a folder of extensionless DICOM files) | the native `.img` cube |
+| B-scan TIFF stack | the folder of `.tif` / `.tiff` (or one file from that folder) | a single photo TIFF with no siblings |
+| Only the 9 ETDRS numbers | a `.csv` (one row of nine sector thicknesses, or a header with `C0`, `N1`…) | a PDF printout, a JPEG, or a screenshot |
+
+PDF, PNG, and JPEG are not volumes. If the device only printed the nine
+numbers, type them into a CSV.
+
+## How to use
 
 1. [Download PicEyeSo](https://rahulnadkarni.github.io/piceyeso/app.html)
    for Mac, Windows, or Linux.
 2. **Mac:** the app is unsigned. Right-click → Open → Open the first time.
-   Double-click is blocked by Gatekeeper. Prefer the disk image when it is on
-   the download page.
+   Double-click is blocked by Gatekeeper. Prefer the disk image when it is
+   on the download page.
 3. A PicEyeSo window opens. It is its own application, not a browser tab.
-4. Open a Heidelberg `.vol`, a TIFF or XML export folder, a `.zip`, Topcon
-   `.fda`, or DICOM. Or paste a path on this computer.
-5. Thickness moves the surface. Click the cap to see that B-scan.
+4. **Open a scan** for a `.vol`, `.e2e`, `.fda`, DICOM, or CSV.
+   **Open a folder** for a TIFF stack, a Heidelberg XML+TIFF export, or a
+   Cirrus DICOM folder. You can also paste a path.
+5. A volume takes a minute or two (B-scans show first, then the 3D cap).
+   A CSV is immediate: the nine numbers become the surface.
+6. Drag to orbit, scroll to zoom. Click the cap (or a sector on the left)
+   to see that B-scan. Thickness is the shape, not only the colour.
+7. **Layer** picks which slab drives the surface. **View** can switch from
+   the 3D cap to the ETDRS bullseye or a layered stack.
+8. **Export PNG** writes a picture of the current view. Opened scans stay
+   on this computer (Application Support on Mac, local app data on
+   Windows).
 
-Opened scans stay on the machine. They are not written into the app itself.
+## Screenshots
+
+**Empty window.** Open a scan, a folder, or a 9-number ETDRS CSV.
+
+![Empty PicEyeSo window](docs/screenshots/01-empty.png)
+
+**OCT volume.** Thickness is the 3D shape. The line on the cap is the B-scan
+on the right (DME7).
+
+![3D macular cap next to its B-scan](docs/screenshots/02-oct.png)
+
+**ETDRS bullseye.** Same nine numbers as a CSV, no volume required.
+
+![ETDRS bullseye from a nine-number CSV](docs/screenshots/03-bullseye.png)
+
+**Layer.** The dropdown is which slab moves the surface (here IS/OS).
+
+![Layer menu on the 3D cap](docs/screenshots/04-layers.png)
+
+**Layered stack.** Each retinal layer as its own disc.
+
+![Layered stack view](docs/screenshots/05-stack.png)
 
 ## For researchers and academics
 
@@ -46,5 +90,4 @@ a 3D object out. Duke public OCT (Srinivasan et al., *Biomed. Opt. Express*
 2014) is used only as published example data.
 
 Methods, a research license, or a collaboration: contact
-[Rahul Nadkarni](https://github.com/RahulNadkarni). That is how source and
-reproducibility materials are shared. They are not in this repository.
+[Rahul Nadkarni](https://github.com/RahulNadkarni).
