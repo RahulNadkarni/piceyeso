@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Download PicEyeSo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Caveat:wght@600&family=Fraunces:ital,opsz,wght@1,9..144,700&family=Fredoka:wght@500&family=IBM+Plex+Mono:wght@500&family=Outfit:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./mark.css" />
   <style>
     :root {
       --bg: #0b0e14;
@@ -26,7 +30,11 @@
     header a:hover { color: var(--ink); }
     .hero { max-width: 720px; margin: 0 auto; padding: 72px 24px 40px; text-align: center; }
     .eyebrow { color: var(--accent); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
-    h1 { font-size: clamp(36px, 6vw, 56px); letter-spacing: -0.03em; margin: 12px 0 12px; }
+    h1 {
+      font-size: clamp(32px, 5.4vw, 52px); letter-spacing: -0.03em; margin: 12px 0 12px;
+      display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 0.22em;
+    }
+    h1 .mark { font-size: 1.08em; }
     .lead { color: var(--muted); font-size: 18px; max-width: 36rem; margin: 0 auto 28px; }
     .download {
       display: inline-flex; flex-direction: column; align-items: center; gap: 6px;
@@ -58,16 +66,15 @@
 </head>
 <body>
   <header>
-    <a href="./">PicEyeSo</a>
+    <a href="./" aria-label="PicEyeSo"><span class="mark" aria-hidden="true"><i class="l-p">P</i><i class="l-i">i</i><i class="l-c">c</i><i class="l-eye">Eye</i><i class="l-s">S</i><i class="l-o">o</i></span></a>
     <a href="https://github.com/RahulNadkarni/piceyeso">GitHub</a>
   </header>
   <section class="hero">
     <p class="eyebrow">Desktop app</p>
-    <h1>Open a scan on this computer.</h1>
+    <h1>Download and try <span class="mark" role="img" aria-label="PicEyeSo"><i class="l-p" aria-hidden="true">P</i><i class="l-i" aria-hidden="true">i</i><i class="l-c" aria-hidden="true">c</i><i class="l-eye" aria-hidden="true">Eye</i><i class="l-s" aria-hidden="true">S</i><i class="l-o" aria-hidden="true">o</i></span> today.</h1>
     <p class="lead">
-      The website is a gallery. The app is a window on this computer:
-      Heidelberg <code>.vol</code>, TIFF folders, DICOM. Nothing leaves this
-      machine. No Python.
+      Your scans are never kept. Everything runs locally — Heidelberg
+      <code>.vol</code>, TIFF folders, DICOM. No Python.
     </p>
     <a id="primary" class="download" href="https://github.com/RahulNadkarni/piceyeso/releases/latest">
       <span id="primaryLabel">Download for macOS</span>

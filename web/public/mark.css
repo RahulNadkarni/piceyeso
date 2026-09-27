@@ -1,0 +1,24 @@
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.015em;
+  line-height: 1;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.mark i {
+  font-style: normal;
+  display: inline-block;
+  line-height: 1;
+}
+.mark .l-p { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-style: italic; }
+.mark .l-i { font-family: "Caveat", "Segoe Script", cursive; font-weight: 600; font-size: 1.28em; }
+.mark .l-c { font-family: "Fredoka", ui-rounded, "Trebuchet MS", sans-serif; font-weight: 500; }
+.mark .l-eye {
+  font-family: "Outfit", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.mark .l-s { font-family: "Bricolage Grotesque", Impact, sans-serif; font-weight: 800; }
+.mark .l-o { font-family: "IBM Plex Mono", "Courier New", monospace; font-weight: 500; }
