@@ -646,9 +646,7 @@ async function boot() {
   $("emptyCopy").textContent = manifest
     ? "Pick an example eye, or drop a 9-number ETDRS CSV. A patient's cube opens in the local app."
     : "Demo data missing. Run: python scripts/export_web.py";
-  status(manifest
-    ? "Example eyes and CSV stay in the browser. A volume opens locally."
-    : "Demo data missing. Run: python scripts/export_web.py");
+  if (!manifest) status("Demo data missing. Run: python scripts/export_web.py");
 }
 
 boot();
