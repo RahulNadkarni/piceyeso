@@ -190,7 +190,7 @@ async function loadFromBase(base) {
   $("play").hidden = true;
   const lead = info.synthetic
     ? "CSV-built mesh: the 9 numbers are heights, not just colours."
-    : "Reconstructed from OCT. The pit / swelling is real geometry.";
+    : "Reconstructed from OCT";
   status(info.note ? `${lead} ${info.note}` : lead);
   revealScan();
   await loadBscan(base);
@@ -386,7 +386,16 @@ function hijackOpen(id, kind) {
   }, true);
 }
 
+function isCsvName(name) {
+  return /\.csv$/i.test(String(name || ""));
+}
+
 async function openVolume(file) {
+  if (isCsvName(file.name)) {
+    loadCsvText(await file.text(), file.name);
+    $("volume").value = "";
+    return;
+  }
   const input = $("volume");
   input.disabled = true;
   try {
@@ -447,6 +456,15 @@ async function openFolder(fileList) {
 async function openPath(raw) {
   const path = (raw || "").trim();
   if (!path) return;
+  if (isCsvName(path)) {
+    const api = desktopApi();
+    if (api && api.read_text) {
+      const text = await api.read_text(path);
+      if (text) loadCsvText(text, path.split(/[/\\]/).pop() || path);
+      else status("Could not read that CSV.");
+      return;
+    }
+  }
   $("pathOpen").disabled = true;
   try {
     const { res, jobId } = await openWithProgress(
@@ -626,10 +644,10 @@ async function boot() {
     return;
   }
   $("emptyCopy").textContent = manifest
-    ? "Pick an example eye, or upload an ETDRS CSV. A patient's scan opens in the local viewer on your computer."
+    ? "Pick an example eye, or drop a 9-number ETDRS CSV. A patient's cube opens in the local app."
     : "Demo data missing. Run: python scripts/export_web.py";
   status(manifest
-    ? "Example eyes and CSV stay in the browser. A .vol is opened locally."
+    ? "Example eyes and CSV stay in the browser. A volume opens locally."
     : "Demo data missing. Run: python scripts/export_web.py");
 }
 

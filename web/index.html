@@ -24,7 +24,7 @@
     <aside>
       <div id="openWrap" hidden>
         <label class="upload">Open a scan
-          <input id="volume" type="file" accept=".vol,.e2e,.xml,.zip,.fda,.dcm,.dicom,.tif,.tiff,application/dicom,application/zip,image/tiff" />
+          <input id="volume" type="file" accept=".vol,.e2e,.xml,.zip,.fda,.dcm,.dicom,.tif,.tiff,.csv,application/dicom,application/zip,image/tiff,text/csv" />
         </label>
         <label class="upload">Open a folder
           <input id="folder" type="file" webkitdirectory directory multiple />
@@ -40,7 +40,7 @@
         <select id="eye"></select>
       </label>
       <p id="localHint" class="hint" hidden>This page shows example eyes. A patient's scan opens in the local viewer and stays on that computer.</p>
-      <label class="upload">Upload ETDRS CSV
+      <label class="upload">Only the 9 numbers? Drop an ETDRS CSV
         <input id="csv" type="file" accept=".csv,text/csv" />
       </label>
       <div id="tools">
@@ -95,7 +95,7 @@
           <button id="emptyOpen" type="button">Open a scan</button>
           <button id="emptyFolder" type="button">Open a folder</button>
           <a id="emptyDownload" class="empty-link" href="./app.html">Download the local app</a>
-          <p id="emptyCopy">A .vol, .zip, a Heidelberg XML folder, or a folder of B-scan TIFFs. It stays on this computer.</p>
+          <p id="emptyCopy">A .vol, Cirrus DICOM, TIFF folder, or zip. Only the 9 ETDRS numbers? Drop a CSV. It stays on this computer.</p>
         </div>
         <canvas id="view3d"></canvas>
         <canvas id="view2d" hidden></canvas>
