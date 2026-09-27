@@ -107,15 +107,18 @@
     const FILES = {
       mac: {
         name: "macOS",
-        prefer: ["RetinaPainter-macOS-arm64.dmg", "RetinaPainter-macOS-arm64.zip"],
+        prefer: [
+          "PicEyeSo-macOS-arm64.dmg", "PicEyeSo-macOS-arm64.zip",
+          "RetinaPainter-macOS-arm64.dmg", "RetinaPainter-macOS-arm64.zip",
+        ],
       },
       win: {
         name: "Windows",
-        prefer: ["RetinaPainter-Windows-x64.zip"],
+        prefer: ["PicEyeSo-Windows-x64.zip", "RetinaPainter-Windows-x64.zip"],
       },
       linux: {
         name: "Linux",
-        prefer: ["RetinaPainter-Linux-x64.tar.gz"],
+        prefer: ["PicEyeSo-Linux-x64.tar.gz", "RetinaPainter-Linux-x64.tar.gz"],
       },
     };
     const ua = navigator.userAgent;
@@ -147,11 +150,11 @@
           + "<li><strong>Right-click → Open → Open.</strong> Gatekeeper warns because the app is unsigned. Double-click is blocked the first time.</li>"
           + "<li>A PicEyeSo window opens. Open a scan. It stays on this computer, under Application Support — not inside the .app.</li>"
         : os === "win"
-        ? "<li>Unzip RetinaPainter-Windows-x64.zip.</li>"
-          + "<li>Open RetinaPainter.exe. A window opens. Windows may ask to allow a private network — that is the local viewer inside the app.</li>"
+        ? "<li>Unzip PicEyeSo-Windows-x64.zip.</li>"
+          + "<li>Open PicEyeSo.exe. A window opens. Windows may ask to allow a private network — that is the local viewer inside the app.</li>"
           + "<li>Open a scan. Sessions are stored under %LOCALAPPDATA%\\RetinaPainter\\</li>"
         : "<li>Unpack the .tar.gz.</li>"
-          + "<li>Run RetinaPainter. A window opens.</li>"
+          + "<li>Run PicEyeSo. A window opens.</li>"
           + "<li>Open a scan. Sessions go under ~/.local/share/retinapainter/</li>";
       if (release) {
         const asset = pickAsset(spec);
