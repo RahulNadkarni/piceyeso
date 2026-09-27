@@ -55,13 +55,18 @@
     .howto ol { margin: 0; padding-left: 1.2em; }
     .features {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px; max-width: 800px; margin: 48px auto 0; padding: 0 24px 80px;
+      gap: 16px; max-width: 800px; margin: 48px auto 0; padding: 0 24px 40px;
     }
     .features article {
       background: var(--panel); border: 1px solid #243044; border-radius: 12px; padding: 18px 16px;
     }
     .features h2 { margin: 0 0 6px; font-size: 15px; }
     .features p { margin: 0; color: var(--muted); font-size: 14px; }
+    footer {
+      max-width: 36rem; margin: 0 auto; padding: 0 24px 64px;
+      color: var(--muted); font-size: 13px; text-align: center;
+    }
+    footer a { color: var(--muted); }
   </style>
 </head>
 <body>
@@ -70,11 +75,11 @@
     <a href="https://github.com/RahulNadkarni/piceyeso">GitHub</a>
   </header>
   <section class="hero">
-    <p class="eyebrow">Desktop app</p>
+    <p class="eyebrow">Independent project · first public release</p>
     <h1>Download and try <span class="mark" role="img" aria-label="PicEyeSo"><i class="l-p" aria-hidden="true">P</i><i class="l-i" aria-hidden="true">i</i><i class="l-c" aria-hidden="true">c</i><i class="l-eye" aria-hidden="true">Eye</i><i class="l-s" aria-hidden="true">S</i><i class="l-o" aria-hidden="true">o</i></span> today.</h1>
     <p class="lead">
-      Your scans are never kept. Everything runs locally — Heidelberg
-      <code>.vol</code>, TIFF folders, DICOM. No Python.
+      A local 3D look at macular thickness. Your scans are never uploaded.
+      Heidelberg <code>.vol</code>, TIFF folders, DICOM. Not a medical device.
     </p>
     <a id="primary" class="download" href="https://github.com/RahulNadkarni/piceyeso/releases/latest">
       <span id="primaryLabel">Download for macOS</span>
@@ -99,33 +104,35 @@
   <section class="features">
     <article>
       <h2>Your file stays here</h2>
-      <p>Nothing is uploaded to GitHub Pages. The app reads the volume on this machine.</p>
+      <p>The app reads the scan on this computer. Nothing is sent to a server.</p>
     </article>
     <article>
-      <h2>Thickness is the shape</h2>
-      <p>ETDRS numbers move the macular cap. A 200 µm sector next to 300 µm is a valley.</p>
+      <h2>Nine numbers or a full scan</h2>
+      <p>Type ETDRS sector thicknesses and the macula updates as you type. Or open a real OCT volume.</p>
     </article>
     <article>
       <h2>B-scan with the cap</h2>
       <p>Click the surface to jump to that slice. A-scan thicknesses are the gaps between the lines.</p>
     </article>
   </section>
+  <footer>
+    Independent project. Source closed for now. Not a medical device — not clinically validated.
+    <br />
+    <a href="mailto:rahulnadkarni2002@gmail.com">rahulnadkarni2002@gmail.com</a>
+  </footer>
   <script>
     const FILES = {
       mac: {
-        name: "macOS",
-        prefer: [
-          "PicEyeSo-macOS-arm64.dmg", "PicEyeSo-macOS-arm64.zip",
-          "RetinaPainter-macOS-arm64.dmg", "RetinaPainter-macOS-arm64.zip",
-        ],
+        name: "macOS (Apple silicon)",
+        prefer: ["PicEyeSo-macOS-arm64.dmg", "PicEyeSo-macOS-arm64.zip"],
       },
       win: {
         name: "Windows",
-        prefer: ["PicEyeSo-Windows-x64.zip", "RetinaPainter-Windows-x64.zip"],
+        prefer: ["PicEyeSo-Windows-x64.zip"],
       },
       linux: {
         name: "Linux",
-        prefer: ["PicEyeSo-Linux-x64.tar.gz", "RetinaPainter-Linux-x64.tar.gz"],
+        prefer: ["PicEyeSo-Linux-x64.tar.gz"],
       },
     };
     const ua = navigator.userAgent;
@@ -153,35 +160,34 @@
       const spec = FILES[os];
       label.textContent = "Download for " + spec.name;
       howto.innerHTML = os === "mac"
-        ? "<li>Open the disk image (or unzip). Drag PicEyeSo to Applications if you like.</li>"
-          + "<li><strong>Apple will block the first open</strong> — the app is not signed. Double-click shows that Apple cannot check it (or Move to Trash). Right-click → Open → Open.</li>"
-          + "<li>If macOS still refuses: System Settings → Privacy &amp; Security → Open Anyway, then Open.</li>"
-          + "<li>A PicEyeSo window opens. Open a scan. It stays on this computer, under Application Support — not inside the .app.</li>"
+        ? "<li>Open the disk image. Apple silicon only (M1 and later).</li>"
+          + "<li><strong>The first open is blocked</strong> — this build is not signed. Right-click → Open → Open. Double-click will refuse.</li>"
+          + "<li>If it still refuses: System Settings → Privacy &amp; Security → Open Anyway.</li>"
+          + "<li>A PicEyeSo window opens. Open a scan or type ETDRS numbers. The file stays on this computer.</li>"
         : os === "win"
-        ? "<li>Unzip PicEyeSo-Windows-x64.zip.</li>"
-          + "<li>Open PicEyeSo.exe. A window opens. Windows may ask to allow a private network — that is the local viewer inside the app.</li>"
-          + "<li>Open a scan. Sessions are stored under %LOCALAPPDATA%\\RetinaPainter\\</li>"
-        : "<li>Unpack the .tar.gz.</li>"
-          + "<li>Run PicEyeSo. A window opens.</li>"
-          + "<li>Open a scan. Sessions go under ~/.local/share/retinapainter/</li>";
+        ? "<li>Unzip the download and open PicEyeSo.exe.</li>"
+          + "<li>Windows may ask to allow a private network — that is the viewer inside the app.</li>"
+          + "<li>Open a scan or type ETDRS numbers. The file stays on this computer.</li>"
+        : "<li>Unpack the .tar.gz and run PicEyeSo.</li>"
+          + "<li>Open a scan or type ETDRS numbers. The file stays on this computer.</li>";
       if (release) {
         const asset = pickAsset(spec);
         if (asset) {
           primary.href = asset.browser_download_url;
           primary.classList.remove("disabled");
           const mb = (asset.size / 1e6).toFixed(0);
-          meta.textContent = (release.tag_name || "latest") + " · " + mb + " MB · " + asset.name;
-          status.textContent = "No Python or conda. The scan is not uploaded.";
+          meta.textContent = "First public release · " + mb + " MB";
+          status.textContent = "Independent project. Not a medical device. Scans stay on this computer.";
         } else {
           primary.href = release.html_url || latest;
           primary.classList.remove("disabled");
-          meta.textContent = (release.tag_name || "latest") + " · choose your OS on the release";
+          meta.textContent = "First public release · choose your OS on GitHub";
           status.textContent = spec.prefer[0] + " is not on this release yet.";
         }
       } else {
         primary.href = latest;
-        meta.textContent = "Opens the latest GitHub Release";
-        status.textContent = "The v0.1.0 tag publishes macOS, Windows, and Linux builds.";
+        meta.textContent = "First public release";
+        status.textContent = "Independent project. Not a medical device.";
       }
     }
 

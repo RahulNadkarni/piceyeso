@@ -16,13 +16,14 @@
       <h1>
         <span class="mark" role="img" aria-label="PicEyeSo"><i class="l-p" aria-hidden="true">P</i><i class="l-i" aria-hidden="true">i</i><i class="l-c" aria-hidden="true">c</i><i class="l-eye" aria-hidden="true">Eye</i><i class="l-s" aria-hidden="true">S</i><i class="l-o" aria-hidden="true">o</i></span>
       </h1>
+      <p class="tag">Independent project · not a medical device</p>
     </div>
     <div id="topStatus" class="top-status" hidden>
       <div class="top-status-track" aria-hidden="true"><i id="topBar"></i></div>
       <p id="status" class="status"></p>
     </div>
     <nav class="links">
-      <a id="downloadApp" href="./app.html">Download the local app</a>
+      <a id="downloadApp" href="./app.html">Download the app</a>
     </nav>
   </header>
   <main>
@@ -44,14 +45,14 @@
       <label id="eyeWrap">Eye
         <select id="eye"></select>
       </label>
-      <p id="localHint" class="hint" hidden>This page shows example eyes. A patient's scan opens in the local viewer and stays on that computer.</p>
+      <p id="localHint" class="hint" hidden>Example eyes on this page. Your own scan opens in the local app and stays on that computer.</p>
       <div id="etdrsBox">
         <span class="etdrs-label">ETDRS</span>
         <div class="etdrs-toggle" role="tablist" aria-label="ETDRS">
           <button type="button" id="etdrsUploadBtn" aria-pressed="true">Upload a table</button>
           <button type="button" id="etdrsTypeBtn" aria-pressed="false">Type values</button>
         </div>
-        <label id="etdrsUploadWrap" class="upload">Choose a table
+        <label id="etdrsUploadWrap" class="upload">Open a thickness table
           <input id="csv" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain" />
         </label>
         <div id="etdrsTypeWrap" hidden></div>
@@ -108,8 +109,8 @@
           <label id="emptyOpen" class="empty-btn" for="volume">Open a scan</label>
           <label id="emptyFolder" class="empty-btn" for="folder">Open a folder</label>
           <button id="emptyEtdrs" type="button" class="empty-btn">Type ETDRS values</button>
-          <a id="emptyDownload" class="empty-link" href="./app.html">Download the local app</a>
-          <p id="emptyCopy">A .vol, Cirrus DICOM, TIFF folder, or zip. Or type nine ETDRS numbers.</p>
+          <a id="emptyDownload" class="empty-link" href="./app.html">Download the app</a>
+          <p id="emptyCopy">Pick an example, type nine ETDRS numbers, or download the app to open a scan on your computer.</p>
         </div>
         <canvas id="view3d"></canvas>
         <canvas id="view2d" hidden></canvas>

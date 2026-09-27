@@ -612,7 +612,8 @@ async function boot() {
   let local = false;
   try {
     const health = await fetch("./api/health");
-    local = health.ok;
+    const body = health.ok ? await health.json() : null;
+    local = !!(body && body.ok);
   } catch (e) {
     local = false;
   }
@@ -707,11 +708,12 @@ async function boot() {
     current.baseCap = null;
   }
   if (local) {
-    status("Open a scan from this computer. It is not uploaded.");
+    $("emptyCopy").textContent = "Open a scan or a folder, or type nine ETDRS numbers. The file stays on this computer.";
+    status("Open a scan from this computer. It stays here.");
     return;
   }
   $("emptyCopy").textContent = manifest
-    ? "Pick an example eye, or type nine ETDRS numbers. A patient's cube opens in the local app."
+    ? "Pick an example eye, or type nine ETDRS numbers. A real scan opens in the app on your computer."
     : "Demo data missing. Run: python scripts/export_web.py";
   if (!manifest) status("Demo data missing. Run: python scripts/export_web.py");
 }
