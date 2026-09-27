@@ -1,0 +1,16 @@
+{
+  "z_scale": 4.0,
+  "base": "BM",
+  "top": "ILM",
+  "radius_mm": 12.0,
+  "cap_diameter_mm": 6.0,
+  "layers_inner_to_outer": [
+    "NFL-IPL",
+    "INL",
+    "OPL",
+    "ONL",
+    "IS/OS",
+    "RPE"
+  ],
+  "laterality": "OD"
+}

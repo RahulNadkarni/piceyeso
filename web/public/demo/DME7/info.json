@@ -1,0 +1,16 @@
+{
+  "id": "DME7",
+  "label": "DME7",
+  "layers": [
+    "NFL-IPL",
+    "INL",
+    "OPL",
+    "ONL",
+    "IS/OS",
+    "RPE",
+    "total"
+  ],
+  "laterality": "OD",
+  "z_scale": 4.0,
+  "synthetic": false
+}

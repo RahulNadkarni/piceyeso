@@ -1,0 +1,130 @@
+:root {
+  --bg: #10141c;
+  --panel: #1a2130;
+  --ink: #e8edf5;
+  --muted: #9aa6b8;
+  --accent: #6ea8fe;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink);
+  font: 14px/1.45 ui-sans-serif, system-ui, sans-serif;
+  display: flex; flex-direction: column; }
+header {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 16px; padding: 10px 20px; border-bottom: 1px solid #2a3344;
+  flex: 0 0 auto;
+}
+h1 { margin: 0; font-size: 22px; letter-spacing: 0.02em; flex: 0 0 auto; }
+.tag { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
+.top-status { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.top-status[hidden] { display: none; }
+.top-status-track {
+  display: none; height: 4px; background: #243044; border-radius: 99px; overflow: hidden;
+}
+.top-status.busy .top-status-track,
+.top-status.metered .top-status-track { display: block; }
+.top-status-track i {
+  display: block; height: 100%; width: 0; background: var(--accent);
+  border-radius: inherit; transition: width 0.25s ease;
+}
+.top-status.busy .top-status-track i {
+  width: 34%;
+  animation: topbar-slide 1.15s ease-in-out infinite;
+}
+@keyframes topbar-slide {
+  0% { transform: translateX(-140%); }
+  100% { transform: translateX(380%); }
+}
+.links { display: flex; gap: 16px; align-items: baseline; flex: 0 0 auto; }
+.links a, .empty-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+.empty-link {
+  display: inline-block; font-size: 16px; padding: 12px 20px;
+  background: #243044; border: 1px solid #334055; border-radius: 6px;
+}
+main { display: grid; grid-template-columns: 280px 1fr; flex: 1; min-height: 0; }
+aside {
+  padding: 16px; background: var(--panel); display: flex; flex-direction: column; gap: 10px;
+  overflow: auto;
+}
+label { display: flex; flex-direction: column; gap: 4px; color: var(--muted); font-size: 12px; }
+select, input[type=number], input[type=file], button {
+  background: #0d121b; color: var(--ink); border: 1px solid #334055; border-radius: 6px;
+  padding: 7px 8px; font: inherit;
+}
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.hint { color: var(--muted); font-size: 12px; margin: 0; }
+.actions { display: flex; gap: 8px; }
+button { cursor: pointer; background: #243044; }
+button:hover { border-color: var(--accent); }
+#stage { position: relative; min-width: 0; min-height: 0; display: flex; }
+#viewport { position: relative; flex: 1; min-width: 0; min-height: 0; }
+#openWrap[hidden], #eyeWrap[hidden], #tools[hidden], #empty[hidden],
+#emptyDownload[hidden], #downloadApp[hidden] { display: none; }
+#tools { display: flex; flex-direction: column; gap: 10px; }
+#empty {
+  position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px; text-align: center;
+  padding: 32px; background: var(--bg);
+}
+#empty button { font-size: 16px; padding: 12px 20px; }
+#pathForm { display: flex; flex-direction: column; gap: 8px; }
+#pathForm button { align-self: flex-start; }
+#localPath { background: #0d121b; color: var(--ink); border: 1px solid #334055; border-radius: 6px; padding: 7px 8px; font: inherit; }
+#empty p { margin: 0; max-width: 28rem; color: var(--muted); }
+#view3d, #view2d { position: absolute; inset: 0; width: 100%; height: 100%; }
+#view3d { cursor: grab; }
+#view3d:active { cursor: grabbing; }
+#view2d { cursor: pointer; }
+#cbar {
+  position: absolute; right: 16px; top: 24px; display: flex; gap: 8px; align-items: stretch;
+  pointer-events: none;
+}
+#cbar img { width: 12px; height: 180px; border-radius: 2px; }
+.cbar-scale { display: flex; flex-direction: column; justify-content: space-between;
+  color: #fff; font-size: 11px; text-shadow: 0 0 4px #000; }
+.mini { display: flex; align-items: center; gap: 6px; color: #fff; font-size: 11px; }
+.mini img { width: 10px; height: 48px; }
+.status {
+  color: var(--accent); margin: 0; min-height: 1.2em; font-size: 13px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.upload input { margin-top: 4px; }
+.subfields { display: flex; flex-direction: column; gap: 4px; }
+.subfields button {
+  display: flex; justify-content: space-between; align-items: center;
+  text-align: left; padding: 6px 8px; cursor: pointer;
+}
+.subfields button[aria-selected="true"] {
+  border-color: var(--accent); background: #1c2d4a; color: #fff;
+}
+.subfields .um { color: var(--ink); font-variant-numeric: tabular-nums; }
+#hud {
+  position: absolute; left: 16px; top: 16px; background: rgba(16, 20, 28, 0.82);
+  color: #fff; padding: 10px 12px; border-radius: 8px; pointer-events: none;
+  min-width: 180px; box-shadow: 0 4px 18px rgba(0,0,0,0.35);
+}
+#hud strong { display: block; font-size: 15px; }
+#hud span { color: #c5d0e0; font-size: 13px; }
+#bscanPane {
+  width: min(46%, 560px); display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 12px; background: #07090d; border-left: 1px solid #2a3344; min-height: 0;
+}
+#bscanPane[hidden] { display: none; }
+#bscanHead { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 12px; }
+#bscanWhere { color: var(--ink); }
+#bscan { flex: 1; min-height: 0; width: 100%; background: #000; border-radius: 4px; }
+#bscanReadout {
+  display: flex; flex-wrap: wrap; gap: 6px 14px; color: #fff4c2; font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+#bscanReadout[hidden] { display: none; }
+#bscanReadout b { color: #fff; font-weight: 600; margin-right: 4px; }
+#bscanLegend { display: flex; flex-wrap: wrap; gap: 4px 10px; color: #c5d0e0; font-size: 11px; }
+.swatch { display: inline-flex; align-items: center; gap: 4px; }
+.swatch i { width: 12px; height: 3px; border-radius: 1px; display: inline-block; }
+@media (max-width: 800px) {
+  main { grid-template-columns: 1fr; height: auto; }
+  #stage { height: auto; flex-direction: column; }
+  #viewport { height: 70vh; }
+  #bscanPane { width: 100%; height: 46vh; border-left: 0; border-top: 1px solid #2a3344; }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "healthy_OD",
+  "label": "Healthy OD",
+  "layers": [
+    "NFL",
+    "GCL",
+    "IPL",
+    "INL",
+    "OPL",
+    "ONL",
+    "IS/OS",
+    "RPE",
+    "total"
+  ],
+  "laterality": "OD",
+  "z_scale": 4.0,
+  "synthetic": false,
+  "note": "NFL, GCL, and IPL are the device's layer lines. The scan is 3.2 \u00d7 3.2 mm, so sectors outside it are blank."
+}

@@ -1,0 +1,91 @@
+{
+  "title": "PicEyeSo",
+  "credit": "Inspired by BrainPainter (Marinescu et al.). Thickness drives geometry, not only colour.",
+  "z_scale": 4.0,
+  "ranges_um": {
+    "NFL-IPL": [
+      40,
+      140
+    ],
+    "NFL": [
+      0,
+      80
+    ],
+    "GCL": [
+      0,
+      90
+    ],
+    "IPL": [
+      0,
+      70
+    ],
+    "INL": [
+      15,
+      70
+    ],
+    "OPL": [
+      20,
+      60
+    ],
+    "ONL": [
+      50,
+      250
+    ],
+    "IS/OS": [
+      20,
+      45
+    ],
+    "RPE": [
+      15,
+      35
+    ],
+    "total": [
+      200,
+      500
+    ]
+  },
+  "subfields": [
+    "central",
+    "inner_superior",
+    "inner_nasal",
+    "inner_inferior",
+    "inner_temporal",
+    "outer_superior",
+    "outer_nasal",
+    "outer_inferior",
+    "outer_temporal"
+  ],
+  "eyes": [
+    {
+      "id": "healthy_OD",
+      "label": "Healthy OD",
+      "path": "healthy_OD",
+      "kind": "reconstruction"
+    },
+    {
+      "id": "NORMAL1",
+      "label": "NORMAL1",
+      "path": "NORMAL1",
+      "kind": "reconstruction"
+    },
+    {
+      "id": "AMD3",
+      "label": "AMD3",
+      "path": "AMD3",
+      "kind": "reconstruction"
+    },
+    {
+      "id": "DME7",
+      "label": "DME7",
+      "path": "DME7",
+      "kind": "reconstruction"
+    },
+    {
+      "id": "synthetic_csv",
+      "label": "synthetic_csv",
+      "path": "synthetic_csv",
+      "kind": "csv"
+    }
+  ],
+  "no_anomaly_scores": true
+}

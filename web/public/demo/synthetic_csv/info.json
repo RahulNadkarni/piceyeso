@@ -1,0 +1,17 @@
+{
+  "id": "_mesh",
+  "label": "synthetic_csv",
+  "layers": [
+    "RNFL",
+    "GCL+IPL",
+    "INL",
+    "OPL",
+    "ONL",
+    "IS/OS",
+    "RPE",
+    "total"
+  ],
+  "laterality": "OD",
+  "z_scale": 4.0,
+  "synthetic": true
+}

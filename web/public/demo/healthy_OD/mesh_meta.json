@@ -1,0 +1,22 @@
+{
+  "z_scale": 4.0,
+  "base": "BM",
+  "top": "ILM",
+  "radius_mm": 12.0,
+  "cap_diameter_mm": 3.24,
+  "layers_inner_to_outer": [
+    "NFL",
+    "GCL",
+    "IPL",
+    "INL",
+    "OPL",
+    "ONL",
+    "IS/OS",
+    "RPE"
+  ],
+  "laterality": "OD",
+  "scan_mm": [
+    3.221433639526367,
+    3.2214215924032032
+  ]
+}

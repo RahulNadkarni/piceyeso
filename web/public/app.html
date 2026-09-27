@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Download PicEyeSo</title>
+  <style>
+    :root {
+      --bg: #0b0e14;
+      --panel: #141a24;
+      --ink: #f2f5fa;
+      --muted: #9aa6b8;
+      --accent: #6ea8fe;
+      --btn: #3b82f6;
+      --btn-ink: #fff;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); color: var(--ink);
+      font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; }
+    a { color: var(--accent); }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 28px; border-bottom: 1px solid #1e2633;
+    }
+    header a { color: var(--muted); text-decoration: none; }
+    header a:hover { color: var(--ink); }
+    .hero { max-width: 720px; margin: 0 auto; padding: 72px 24px 40px; text-align: center; }
+    .eyebrow { color: var(--accent); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 { font-size: clamp(36px, 6vw, 56px); letter-spacing: -0.03em; margin: 12px 0 12px; }
+    .lead { color: var(--muted); font-size: 18px; max-width: 36rem; margin: 0 auto 28px; }
+    .download {
+      display: inline-flex; flex-direction: column; align-items: center; gap: 6px;
+      min-width: 280px; padding: 16px 28px; border: 0; border-radius: 12px;
+      background: var(--btn); color: var(--btn-ink); text-decoration: none; font-size: 18px;
+    }
+    .download small { font-size: 12px; opacity: 0.85; font-weight: 400; }
+    .download.disabled { background: #243044; pointer-events: none; }
+    .alts { margin: 18px 0 0; color: var(--muted); font-size: 14px; }
+    .alts button {
+      background: none; border: 0; color: var(--accent); cursor: pointer; font: inherit; padding: 0;
+    }
+    .status { margin-top: 16px; color: var(--muted); font-size: 13px; min-height: 1.4em; }
+    .howto {
+      max-width: 36rem; margin: 28px auto 0; text-align: left; color: var(--muted); font-size: 14px;
+    }
+    .howto h2 { color: var(--ink); font-size: 15px; margin: 0 0 8px; }
+    .howto ol { margin: 0; padding-left: 1.2em; }
+    .features {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px; max-width: 800px; margin: 48px auto 0; padding: 0 24px 80px;
+    }
+    .features article {
+      background: var(--panel); border: 1px solid #243044; border-radius: 12px; padding: 18px 16px;
+    }
+    .features h2 { margin: 0 0 6px; font-size: 15px; }
+    .features p { margin: 0; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="./">PicEyeSo</a>
+    <a href="https://github.com/RahulNadkarni/piceyeso">GitHub</a>
+  </header>
+  <section class="hero">
+    <p class="eyebrow">Desktop app</p>
+    <h1>Open a scan on this computer.</h1>
+    <p class="lead">
+      The website is a gallery. The app is a window on this computer:
+      Heidelberg <code>.vol</code>, TIFF folders, DICOM. Nothing leaves this
+      machine. No Python.
+    </p>
+    <a id="primary" class="download" href="https://github.com/RahulNadkarni/piceyeso/releases/latest">
+      <span id="primaryLabel">Download for macOS</span>
+      <small id="primaryMeta">Latest release</small>
+    </a>
+    <p class="alts">
+      Also available for
+      <button type="button" data-os="mac">macOS</button>,
+      <button type="button" data-os="win">Windows</button>,
+      <button type="button" data-os="linux">Linux</button>.
+    </p>
+    <p id="status" class="status"></p>
+    <div class="howto">
+      <h2>After you download</h2>
+      <ol id="howto">
+        <li>Unzip the archive (or open the disk image).</li>
+        <li>Open PicEyeSo. It is its own window, not a browser tab.</li>
+        <li>Choose Open a scan or a folder. The file stays here.</li>
+      </ol>
+    </div>
+  </section>
+  <section class="features">
+    <article>
+      <h2>Your file stays here</h2>
+      <p>Nothing is uploaded to GitHub Pages. The app reads the volume on this machine.</p>
+    </article>
+    <article>
+      <h2>Thickness is the shape</h2>
+      <p>ETDRS numbers move the macular cap. A 200 µm sector next to 300 µm is a valley.</p>
+    </article>
+    <article>
+      <h2>B-scan with the cap</h2>
+      <p>Click the surface to jump to that slice. A-scan thicknesses are the gaps between the lines.</p>
+    </article>
+  </section>
+  <script>
+    const FILES = {
+      mac: {
+        name: "macOS",
+        prefer: ["RetinaPainter-macOS-arm64.dmg", "RetinaPainter-macOS-arm64.zip"],
+      },
+      win: {
+        name: "Windows",
+        prefer: ["RetinaPainter-Windows-x64.zip"],
+      },
+      linux: {
+        name: "Linux",
+        prefer: ["RetinaPainter-Linux-x64.tar.gz"],
+      },
+    };
+    const ua = navigator.userAgent;
+    let os = /Windows/i.test(ua) ? "win" : /Linux/i.test(ua) ? "linux" : "mac";
+
+    const primary = document.getElementById("primary");
+    const label = document.getElementById("primaryLabel");
+    const meta = document.getElementById("primaryMeta");
+    const status = document.getElementById("status");
+    const howto = document.getElementById("howto");
+    const latest = "https://github.com/RahulNadkarni/piceyeso/releases/latest";
+    let release = null;
+
+    function pickAsset(spec) {
+      const assets = (release && release.assets) || [];
+      for (const name of spec.prefer) {
+        const hit = assets.find((a) => a.name === name);
+        if (hit) return hit;
+      }
+      return null;
+    }
+
+    function apply(which) {
+      os = which;
+      const spec = FILES[os];
+      label.textContent = "Download for " + spec.name;
+      howto.innerHTML = os === "mac"
+        ? "<li>Open the disk image (or unzip). Drag PicEyeSo to Applications if you like.</li>"
+          + "<li><strong>Right-click → Open → Open.</strong> Gatekeeper warns because the app is unsigned. Double-click is blocked the first time.</li>"
+          + "<li>A PicEyeSo window opens. Open a scan. It stays on this computer, under Application Support — not inside the .app.</li>"
+        : os === "win"
+        ? "<li>Unzip RetinaPainter-Windows-x64.zip.</li>"
+          + "<li>Open RetinaPainter.exe. A window opens. Windows may ask to allow a private network — that is the local viewer inside the app.</li>"
+          + "<li>Open a scan. Sessions are stored under %LOCALAPPDATA%\\RetinaPainter\\</li>"
+        : "<li>Unpack the .tar.gz.</li>"
+          + "<li>Run RetinaPainter. A window opens.</li>"
+          + "<li>Open a scan. Sessions go under ~/.local/share/retinapainter/</li>";
+      if (release) {
+        const asset = pickAsset(spec);
+        if (asset) {
+          primary.href = asset.browser_download_url;
+          primary.classList.remove("disabled");
+          const mb = (asset.size / 1e6).toFixed(0);
+          meta.textContent = (release.tag_name || "latest") + " · " + mb + " MB · " + asset.name;
+          status.textContent = "No Python or conda. The scan is not uploaded.";
+        } else {
+          primary.href = release.html_url || latest;
+          primary.classList.remove("disabled");
+          meta.textContent = (release.tag_name || "latest") + " · choose your OS on the release";
+          status.textContent = spec.prefer[0] + " is not on this release yet.";
+        }
+      } else {
+        primary.href = latest;
+        meta.textContent = "Opens the latest GitHub Release";
+        status.textContent = "The v0.1.0 tag publishes macOS, Windows, and Linux builds.";
+      }
+    }
+
+    document.querySelectorAll("[data-os]").forEach((btn) => {
+      btn.addEventListener("click", () => apply(btn.dataset.os));
+    });
+
+    apply(os);
+    fetch("https://api.github.com/repos/RahulNadkarni/piceyeso/releases/latest")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => { release = data; apply(os); })
+      .catch(() => {});
+  </script>
+</body>
+</html>

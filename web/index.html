@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PicEyeSo</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <header>
+    <div>
+      <h1>PicEyeSo</h1>
+      <p class="tag">Eye See Everything</p>
+    </div>
+    <div id="topStatus" class="top-status" hidden>
+      <div class="top-status-track" aria-hidden="true"><i id="topBar"></i></div>
+      <p id="status" class="status"></p>
+    </div>
+    <nav class="links">
+      <a id="downloadApp" href="./app.html">Download the local app</a>
+    </nav>
+  </header>
+  <main>
+    <aside>
+      <div id="openWrap" hidden>
+        <label class="upload">Open a scan
+          <input id="volume" type="file" accept=".vol,.e2e,.xml,.zip,.fda,.dcm,.dicom,.tif,.tiff,application/dicom,application/zip,image/tiff" />
+        </label>
+        <label class="upload">Open a folder
+          <input id="folder" type="file" webkitdirectory directory multiple />
+        </label>
+        <form id="pathForm">
+          <label>Or a path on this computer
+            <input id="localPath" type="text" spellcheck="false" placeholder="/path/to/scan.vol or export folder" />
+          </label>
+          <button id="pathOpen" type="submit">Open path</button>
+        </form>
+      </div>
+      <label id="eyeWrap">Eye
+        <select id="eye"></select>
+      </label>
+      <p id="localHint" class="hint" hidden>This page shows example eyes. A patient's scan opens in the local viewer and stays on that computer.</p>
+      <label class="upload">Upload ETDRS CSV
+        <input id="csv" type="file" accept=".csv,text/csv" />
+      </label>
+      <div id="tools">
+      <label>Layer
+        <select id="layer"></select>
+      </label>
+      <label>View
+        <select id="view">
+          <option value="3d">3D surface</option>
+          <option value="layered">Layered stack</option>
+          <option value="section">Cross-section</option>
+          <option value="bullseye">ETDRS bullseye</option>
+        </select>
+      </label>
+      <label>Colormap
+        <select id="cmap">
+          <option value="viridis">viridis</option>
+          <option value="plasma">plasma</option>
+          <option value="inferno">inferno</option>
+          <option value="magma">magma</option>
+          <option value="turbo">turbo</option>
+        </select>
+      </label>
+      <label>Laterality
+        <select id="laterality">
+          <option value="OD">OD (right)</option>
+          <option value="OS">OS (left)</option>
+        </select>
+      </label>
+      <div class="row">
+        <label>vmin <input id="vmin" type="number" step="1" /></label>
+        <label>vmax <input id="vmax" type="number" step="1" /></label>
+      </div>
+      <label>Layer opacity
+        <input id="opacity" type="range" min="0.15" max="1" step="0.05" value="0.55" />
+      </label>
+      <label>Depth exaggeration
+        <input id="zscale" type="range" min="1" max="8" step="0.5" value="4" />
+        <span id="zscaleVal">4×</span>
+      </label>
+      <p class="hint">Drag the 3D view to orbit, scroll to zoom. Click a sector on the surface, or pick one below, to inspect that ETDRS subfield.</p>
+      <div id="subfields" class="subfields" role="listbox" aria-label="ETDRS subfields"></div>
+      <div class="actions">
+        <button id="png" type="button">Export PNG</button>
+        <button id="play" type="button" hidden>Play time series</button>
+      </div>
+      </div>
+    </aside>
+    <section id="stage">
+      <div id="viewport">
+        <div id="empty" hidden>
+          <button id="emptyOpen" type="button">Open a scan</button>
+          <button id="emptyFolder" type="button">Open a folder</button>
+          <a id="emptyDownload" class="empty-link" href="./app.html">Download the local app</a>
+          <p id="emptyCopy">A .vol, .zip, a Heidelberg XML folder, or a folder of B-scan TIFFs. It stays on this computer.</p>
+        </div>
+        <canvas id="view3d"></canvas>
+        <canvas id="view2d" hidden></canvas>
+        <div id="hud" hidden></div>
+        <div id="cbar"></div>
+      </div>
+      <div id="bscanPane" hidden>
+        <div id="bscanHead"><span id="bscanTitle">B-scan</span><span id="bscanWhere"></span></div>
+        <canvas id="bscan"></canvas>
+        <input id="bscanSlider" type="range" min="0" max="0" step="1" value="0" aria-label="B-scan" />
+        <div id="bscanReadout" hidden></div>
+        <div id="bscanLegend"></div>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
