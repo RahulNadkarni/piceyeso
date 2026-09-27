@@ -37,10 +37,62 @@ export function legendGradient(name) {
   const c = document.createElement("canvas");
   c.width = 8; c.height = 256;
   const ctx = c.getContext("2d");
-  for (let y = 0; y < 256; y++) {
-    const [r, g, b] = sampleCmap(name, 1 - y / 255);
-    ctx.fillStyle = `rgb(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)})`;
-    ctx.fillRect(0, y, 8, 1);
-  }
+  fillBar(ctx, 0, 0, 8, 256, name);
   return c.toDataURL();
+}
+
+function fillBar(ctx, x, y, w, h, cmap) {
+  const n = Math.max(1, Math.round(h));
+  for (let i = 0; i < n; i++) {
+    const [r, g, b] = sampleCmap(cmap, 1 - i / Math.max(n - 1, 1));
+    ctx.fillStyle = `rgb(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)})`;
+    ctx.fillRect(x, y + i, w, 2);
+  }
+}
+
+/** Draw the on-screen colorbar onto an export canvas. `px` is CSS-pixel scale. */
+export function paintLegend(ctx, width, height, legend, px = 1) {
+  if (!legend || !ctx) return;
+  ctx.save();
+  ctx.shadowColor = "#000";
+  ctx.shadowBlur = 4 * px;
+  ctx.fillStyle = "#fff";
+  if (legend.kind === "layers") {
+    const items = legend.items || [];
+    const barW = 10 * px;
+    const barH = 48 * px;
+    const top = 24 * px;
+    ctx.font = `${Math.max(10, 11 * px)}px ui-sans-serif, system-ui`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    const col = Math.max(28 * px, ...items.map((it) => ctx.measureText(it.name).width + 8 * px));
+    let x = width - 16 * px - col * items.length;
+    items.forEach((it, i) => {
+      const bx = x + i * col + (col - barW) / 2;
+      fillBar(ctx, bx, top, barW, barH, it.cmap);
+      ctx.fillText(it.name, x + i * col + col / 2, top + barH + 6 * px);
+    });
+  } else {
+    const vmin = Number(legend.vmin);
+    const vmax = Number(legend.vmax);
+    const label = String(legend.label || "");
+    const barW = 12 * px;
+    const barH = 180 * px;
+    const top = 24 * px;
+    const gap = 8 * px;
+    ctx.font = `${Math.max(10, 11 * px)}px ui-sans-serif, system-ui`;
+    const hi = Number.isFinite(vmax) ? vmax.toFixed(0) : "";
+    const lo = Number.isFinite(vmin) ? vmin.toFixed(0) : "";
+    const tw = Math.max(ctx.measureText(hi).width, ctx.measureText(lo).width, ctx.measureText(label).width);
+    const x = width - 16 * px - tw - gap - barW;
+    fillBar(ctx, x, top, barW, barH, legend.cmap || "viridis");
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillText(hi, x + barW + gap, top);
+    ctx.textBaseline = "middle";
+    ctx.fillText(label, x + barW + gap, top + barH / 2);
+    ctx.textBaseline = "bottom";
+    ctx.fillText(lo, x + barW + gap, top + barH);
+  }
+  ctx.restore();
 }

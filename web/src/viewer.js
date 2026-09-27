@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { colorize, legendGradient, sampleCmap } from "./colormap.js";
+import { colorize, legendGradient, paintLegend, sampleCmap } from "./colormap.js";
 import {
   assignSubfield, layerField, resolveStack, samplePolar, smoothLayerField,
   SUBFIELDS, SUBFIELD_LABELS, totalValues,
@@ -45,6 +45,7 @@ export class Viewer {
     this._drag = null;
     this._framed = false;
     this.onPick = null;
+    this._legend = null;
     this._scanGroup = new THREE.Group();
     this.scene.add(this._scanGroup);
     this.resize();
@@ -128,9 +129,20 @@ export class Viewer {
   }
 
   drawColorbar(vmin, vmax, cmap, label) {
+    this._legend = { kind: "scale", vmin, vmax, cmap, label };
     this.cbar.innerHTML = `
       <img alt="" src="${legendGradient(cmap)}" />
       <div class="cbar-scale"><span>${vmax.toFixed(0)}</span><span>${label}</span><span>${vmin.toFixed(0)}</span></div>`;
+  }
+
+  _drawLayerLegend(names) {
+    this._legend = {
+      kind: "layers",
+      items: names.map((name, i) => ({ name, cmap: LAYER_CMAPS[i % LAYER_CMAPS.length] })),
+    };
+    this.cbar.innerHTML = names.map((n, i) =>
+      `<div class="mini"><img src="${legendGradient(LAYER_CMAPS[i % LAYER_CMAPS.length])}" alt="" /><span>${n}</span></div>`
+    ).join("");
   }
 
   show3d({ layer, cmap, vmin, vmax, laterality, zScale }) {
@@ -177,9 +189,7 @@ export class Viewer {
         if (i === 0) this._pickMesh = sheet;
       }
     });
-    this.cbar.innerHTML = layers.map((n, i) =>
-      `<div class="mini"><img src="${legendGradient(LAYER_CMAPS[i % LAYER_CMAPS.length])}" alt="" /><span>${n}</span></div>`
-    ).join("");
+    this._drawLayerLegend(layers);
     const top = this.group.children[this.group.children.length - 1];
     if (top) this._frameOnce(top);
   }
@@ -362,9 +372,7 @@ export class Viewer {
       this.group.add(mesh);
       if (i === 0) this._pickMesh = mesh;
     });
-    this.cbar.innerHTML = layers.map((L, i) =>
-      `<div class="mini"><img src="${legendGradient(LAYER_CMAPS[i % LAYER_CMAPS.length])}" alt="" /><span>${L.name}</span></div>`
-    ).join("");
+    this._drawLayerLegend(layers.map((L) => L.name));
   }
 
   showBullseye({ layer, cmap, vmin, vmax, laterality }) {
@@ -485,16 +493,25 @@ export class Viewer {
       ctx.fillText(n, w - 90, 28 + i * 18);
     });
     this.cbar.innerHTML = "";
+    this._legend = null;
   }
 
   async exportPng() {
+    if (!this.canvas3d.hidden) this.renderer.render(this.scene, this.camera);
     const src = this.canvas3d.hidden ? this.canvas2d : this.canvas3d;
-    const data = src.toDataURL("image/png");
+    const out = document.createElement("canvas");
+    out.width = src.width;
+    out.height = src.height;
+    const ctx = out.getContext("2d");
+    ctx.drawImage(src, 0, 0);
+    const cssW = src.clientWidth || src.width;
+    paintLegend(ctx, out.width, out.height, this._legend, out.width / Math.max(cssW, 1));
+    const data = out.toDataURL("image/png");
     const api = window.pywebview && window.pywebview.api;
     if (api && api.save_png) return api.save_png(data);
     const a = document.createElement("a");
     a.href = data;
-    a.download = "retinapainter.png";
+    a.download = "piceyeso.png";
     document.body.appendChild(a);
     a.click();
     a.remove();
