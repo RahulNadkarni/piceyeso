@@ -1,17 +1,50 @@
 import { SUBFIELDS } from "./etdrs.js";
 
+export const DEFAULT_ETDRS_UM = [276, 339, 337, 331, 333, 292, 300, 289, 288];
+
 function parseNumber(x) {
-  const v = Number(x);
+  const v = Number(String(x).replace(/[, ]+$/g, ""));
   return Number.isFinite(v) ? v : NaN;
+}
+
+function delimiter(line) {
+  const tab = (line.match(/\t/g) || []).length;
+  const semi = (line.match(/;/g) || []).length;
+  const comma = (line.match(/,/g) || []).length;
+  if (tab >= semi && tab >= comma && tab > 0) return "\t";
+  if (semi > comma) return ";";
+  return ",";
+}
+
+function splitTable(text) {
+  const lines = String(text || "").trim().split(/\r?\n/).filter((l) => l.trim());
+  if (!lines.length) return [];
+  const sep = delimiter(lines[0]);
+  return lines.map((r) => r.split(sep).map((c) => c.trim()));
+}
+
+export function tableFromNine(vals) {
+  const um = SUBFIELDS.map((_, i) => {
+    const v = Number(vals[i]);
+    return Number.isFinite(v) ? v : DEFAULT_ETDRS_UM[i];
+  });
+  return { total: Object.fromEntries(SUBFIELDS.map((s, i) => [s, um[i]])) };
 }
 
 /** One-eye table: {layer: {subfield: number}} */
 export function parseEtdrsCsv(text) {
-  const rows = text.trim().split(/\r?\n/).map((r) => r.split(",").map((c) => c.trim()));
+  const rows = splitTable(text);
+  if (!rows.length) return {};
+  const firstNums = rows[0].map(parseNumber);
+  if (firstNums.filter(Number.isFinite).length >= 9 && !/[a-zA-Z]/.test(rows[0][0] || "")) {
+    return tableFromNine(firstNums);
+  }
   const header = rows[0].slice(1).map((h) => h.toLowerCase());
   const named = SUBFIELDS.every((s) => header.includes(s));
+  const body = named || firstNums.slice(1).filter(Number.isFinite).length < 8
+    ? rows.slice(1) : rows;
   const table = {};
-  for (const r of rows.slice(1)) {
+  for (const r of body) {
     if (!r[0]) continue;
     const vals = r.slice(1).map(parseNumber);
     table[r[0]] = Object.fromEntries(SUBFIELDS.map((s, i) => [
@@ -23,7 +56,8 @@ export function parseEtdrsCsv(text) {
 
 /** Time series: {timepoints, layers, values[t][layer][9]} */
 export function parseTimeSeriesCsv(text) {
-  const rows = text.trim().split(/\r?\n/).map((r) => r.split(",").map((c) => c.trim()));
+  const rows = splitTable(text);
+  if (!rows.length) return null;
   const header = rows[0].map((h) => h.toLowerCase());
   if (header[0] !== "timepoint") return null;
   const sub = header.slice(2);

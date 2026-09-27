@@ -147,7 +147,8 @@
       label.textContent = "Download for " + spec.name;
       howto.innerHTML = os === "mac"
         ? "<li>Open the disk image (or unzip). Drag PicEyeSo to Applications if you like.</li>"
-          + "<li><strong>Right-click → Open → Open.</strong> Gatekeeper warns because the app is unsigned. Double-click is blocked the first time.</li>"
+          + "<li><strong>Apple will block the first open</strong> — the app is not signed. Double-click shows that Apple cannot check it (or Move to Trash). Right-click → Open → Open.</li>"
+          + "<li>If macOS still refuses: System Settings → Privacy &amp; Security → Open Anyway, then Open.</li>"
           + "<li>A PicEyeSo window opens. Open a scan. It stays on this computer, under Application Support — not inside the .app.</li>"
         : os === "win"
         ? "<li>Unzip PicEyeSo-Windows-x64.zip.</li>"

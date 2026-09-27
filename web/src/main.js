@@ -1,5 +1,5 @@
 import { Viewer } from "./viewer.js";
-import { parseEtdrsCsv, parseTimeSeriesCsv, lerpSeries, tableFromFrame } from "./csv.js";
+import { parseEtdrsCsv, parseTimeSeriesCsv, lerpSeries, tableFromFrame, tableFromNine, DEFAULT_ETDRS_UM } from "./csv.js";
 import { resolveStack, sectorCenter, SUBFIELDS, SUBFIELD_LABELS, totalValues } from "./etdrs.js";
 import {
   ascanSlabs, clickToAscan, enfaceToScan, legendHtml, paintBscan, readoutHtml,
@@ -189,7 +189,7 @@ async function loadFromBase(base) {
   await viewer.loadEye(base, info, fields, table, baseCap);
   $("play").hidden = true;
   const lead = info.synthetic
-    ? "CSV-built mesh: the 9 numbers are heights, not just colours."
+    ? "Nine ETDRS numbers as heights, not just colours."
     : "Reconstructed from OCT";
   status(info.note ? `${lead} ${info.note}` : lead);
   revealScan();
@@ -372,26 +372,31 @@ async function waitForDesktopApi(ms = 4000) {
 async function pickNative(kind) {
   const api = desktopApi() || await waitForDesktopApi();
   if (!api) return false;
-  const path = kind === "folder" ? await api.open_folder() : await api.open_scan();
-  if (path) await openPath(path);
-  return true;
+  try {
+    const path = kind === "folder" ? await api.open_folder() : await api.open_scan();
+    if (path) await openPath(path);
+    return true;
+  } catch (e) {
+    status("Could not open a file dialog.");
+    return false;
+  }
 }
 
 function hijackOpen(id, kind) {
   $(id).addEventListener("click", (ev) => {
-    if (!window.pywebview) return;
+    if (!desktopApi()) return;
     ev.preventDefault();
     ev.stopImmediatePropagation();
     pickNative(kind);
   }, true);
 }
 
-function isCsvName(name) {
-  return /\.csv$/i.test(String(name || ""));
+function isTableName(name) {
+  return /\.(csv|tsv|txt)$/i.test(String(name || ""));
 }
 
 async function openVolume(file) {
-  if (isCsvName(file.name)) {
+  if (isTableName(file.name)) {
     loadCsvText(await file.text(), file.name);
     $("volume").value = "";
     return;
@@ -456,12 +461,12 @@ async function openFolder(fileList) {
 async function openPath(raw) {
   const path = (raw || "").trim();
   if (!path) return;
-  if (isCsvName(path)) {
+  if (isTableName(path)) {
     const api = desktopApi();
     if (api && api.read_text) {
       const text = await api.read_text(path);
       if (text) loadCsvText(text, path.split(/[/\\]/).pop() || path);
-      else status("Could not read that CSV.");
+      else status("Could not read that table.");
       return;
     }
   }
@@ -511,7 +516,7 @@ function loadCsvText(text, name) {
       ? "One ILM–RPE row. The cap is that total thickness; it is not split into layers."
       : stack.splitInner
         ? "NFL, GCL, and IPL are split from the combined inner slab along a foveal profile."
-        : "Uploaded CSV. Thickness follows a foveal profile, not flat ETDRS blocks.");
+        : "ETDRS table. Thickness follows a foveal profile, not flat blocks.");
   }
   if (!current.baseCap) {
     status("The thickness surface is not available yet.");
@@ -542,7 +547,68 @@ function playSeries() {
   setTimeout(() => { playing = false; $("play").textContent = "Play time series"; }, dur);
 }
 
+function currentNine() {
+  if (current.table) {
+    const vals = totalValues(current.table);
+    if (vals.some(Number.isFinite)) return vals.map((v, i) => Number.isFinite(v) ? Math.round(v) : DEFAULT_ETDRS_UM[i]);
+  }
+  return DEFAULT_ETDRS_UM.slice();
+}
+
+function fillEtdrsType(vals) {
+  const box = $("etdrsTypeWrap");
+  box.innerHTML = SUBFIELD_LABELS.map((label, i) => (
+    `<label>${label}<input data-etdrs="${i}" type="number" step="1" value="${vals[i]}" /></label>`
+  )).join("");
+  box.querySelectorAll("input").forEach((el) => {
+    el.addEventListener("input", applyTypedEtdrs);
+  });
+}
+
+function applyTypedEtdrs() {
+  const inputs = [...$("etdrsTypeWrap").querySelectorAll("input")];
+  const vals = inputs.map((el, i) => {
+    const n = Number(el.value);
+    return Number.isFinite(n) ? n : DEFAULT_ETDRS_UM[i];
+  });
+  if (!current.baseCap) {
+    status("The thickness surface is not available yet.");
+    return;
+  }
+  current.series = null;
+  current.fields = null;
+  current.table = tableFromNine(vals);
+  current.info = {
+    layers: ["total"],
+    laterality: $("laterality").value,
+    z_scale: Number($("zscale").value),
+    id: "typed",
+  };
+  hideBscan();
+  $("play").hidden = true;
+  $("eye").value = "";
+  revealScan();
+  viewer.setCsvEye(current.baseCap, current.table, current.info);
+  fillLayers(current.table);
+  applyRangeDefaults();
+  status("Nine ETDRS sectors. The cap updates as you type.");
+  render();
+}
+
+function setEtdrsMode(mode) {
+  const type = mode === "type";
+  $("etdrsUploadBtn").setAttribute("aria-pressed", type ? "false" : "true");
+  $("etdrsTypeBtn").setAttribute("aria-pressed", type ? "true" : "false");
+  $("etdrsUploadWrap").hidden = type;
+  $("etdrsTypeWrap").hidden = !type;
+  if (type) {
+    fillEtdrsType(currentNine());
+    applyTypedEtdrs();
+  }
+}
+
 async function boot() {
+  if (window.pywebview) await waitForDesktopApi();
   let local = false;
   try {
     const health = await fetch("./api/health");
@@ -575,6 +641,9 @@ async function boot() {
     const f = ev.target.files[0];
     if (f) loadCsvText(await f.text(), f.name);
   });
+  $("etdrsUploadBtn").addEventListener("click", () => setEtdrsMode("upload"));
+  $("etdrsTypeBtn").addEventListener("click", () => setEtdrsMode("type"));
+  $("emptyEtdrs").addEventListener("click", () => setEtdrsMode("type"));
   $("volume").addEventListener("change", (ev) => {
     const f = ev.target.files[0];
     if (f) openVolume(f);
@@ -588,8 +657,6 @@ async function boot() {
   hijackOpen("folder", "folder");
   hijackOpen("emptyOpen", "scan");
   hijackOpen("emptyFolder", "folder");
-  $("emptyOpen").addEventListener("click", () => $("volume").click());
-  $("emptyFolder").addEventListener("click", () => $("folder").click());
   $("bscanSlider").addEventListener("input", () => showBscan(Number($("bscanSlider").value)));
   $("bscan").addEventListener("click", (ev) => {
     if (!bscanMeta) return;
@@ -644,7 +711,7 @@ async function boot() {
     return;
   }
   $("emptyCopy").textContent = manifest
-    ? "Pick an example eye, or drop a 9-number ETDRS CSV. A patient's cube opens in the local app."
+    ? "Pick an example eye, or type nine ETDRS numbers. A patient's cube opens in the local app."
     : "Demo data missing. Run: python scripts/export_web.py";
   if (!manifest) status("Demo data missing. Run: python scripts/export_web.py");
 }
